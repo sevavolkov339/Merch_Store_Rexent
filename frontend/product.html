@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Jersey 10', sans-serif;
+        }
+
+        .product-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1600px;
+            width: 90%;
+            padding: 80px;
+        }
+
+        .product-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            margin-left: 90px;
+        }
+
+        .product-image img {
+            width: 120%;
+            max-width: 1200px;
+            border-radius: 10px;
+        }
+
+        .product-info {
+            flex: 1;
+            text-align: left;
+            margin-left: 400px;
+        }
+
+        .product-info h1 {
+            font-size: 52px;
+            margin-bottom: 25px;
+        }
+
+        .product-info p {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .buy-button {
+            background-color: black;
+            color: white;
+            padding: 22px 36px;
+            border: none;
+            font-size: 40px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 25px;
+        }
+
+        .buy-button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="product-container">
+    <div class="product-image">
+        <img id="product-image" src="" alt="Product Image">
+    </div>
+    <div class="product-info">
+        <h1 id="product-name">Loading...</h1>
+        <p id="product-description"></p>
+        <p id="product-long-description"></p>
+        <p><strong>Price:</strong> <span id="product-price"></span></p>
+        <button id="buy-button" class="buy-button">Buy Now</button>
+    </div>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('id');
+
+    fetch(`http://localhost:5000/products/${productId}`)
+        .then(response => response.json())
+        .then(product => {
+            document.getElementById('product-name').textContent = product.name;
+            document.getElementById('product-description').textContent = product.description;
+            document.getElementById('product-long-description').textContent = product.longDescription || "No additional details available.";
+            document.getElementById('product-price').textContent = `$${product.price}`;
+            document.getElementById('product-image').src = product.imageUrl;
+
+            /*document.getElementById('buy-button').onclick = function () {
+                window.location.href = `https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick&business=test@example.com&item_name=${product.name}&amount=${product.price}&currency_code=USD`;
+            };*/
+        })
+        .catch(error => console.error('Error:', error));
+
+    document.getElementById('buy-button').onclick = function () {
+        const productId = params.get('id');
+
+        if (!productId) {
+            alert('Product ID is missing!');
+            return;
+        }
+
+        window.location.href = `/frontend/buy_product.html?id=${productId}`;
+    };
+
+
+</script>
+
+</body>
+</html>

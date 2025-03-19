@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Jersey 10', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-size: 26px;
+        }
+
+        form {
+            font-family: 'Jersey 10', sans-serif;
+            width: 100%;
+            max-width: 500px;
+            border: 3px solid #000000;
+            padding: 20px;
+            border-radius: 0;
+            font-size: 22px;
+            margin: 0px auto;
+            display: block;
+        }
+
+        input {
+            font-family: 'Jersey 10', sans-serif;
+            width: 80%;
+            padding: 10px;
+            margin: 20px 0;
+            border: 3px solid #000000;
+            border-radius: 0px;
+            font-size: 22px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        button {
+            font-family: 'Jersey 10', sans-serif;
+            width: 80%;
+            padding: 10px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 0px;
+            cursor: pointer;
+            font-size: 26px;
+            animation: none;
+            transition: background-color 0.2s ease;
+            margin: 0 auto;
+            display: block;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            animation: squash-stretch 0.3s ease forwards;
+            background-color: #333;
+        }
+
+
+        @keyframes squash-stretch {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1, 0.8);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>Complete Your Purchase!</h1>
+<form id="checkout-form">
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="name" placeholder="Your full name" required>
+
+    <label for="address">Address</label>
+    <input type="text" id="address" name="address" placeholder="Your address" required>
+
+    <label for="paypal-email">PayPal ID (Email Address)</label>
+    <input type="email" id="paypal-email" name="paypalEmail" placeholder="Your PayPal email address" required>
+
+    <button id="proceed-button" class="proceed-button" type="button">Proceed to PayPal</button>
+</form>
+
+<script>
+    document.getElementById('proceed-button').addEventListener('click', async function () {
+        const name = document.getElementById('name').value;
+        const address = document.getElementById('address').value;
+        const paypalEmail = document.getElementById('paypal-email').value;
+        const productId = new URLSearchParams(window.location.search).get('id');
+
+        if (!name || !address || !paypalEmail || !productId) {
+            alert('Please fill out all fields!');
+            return;
+        }
+
+        //Api call
+        try {
+            const createOrderResponse = await fetch('http://localhost:5000/payment/create-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, address, paypalEmail, productId }),
+            });
+
+            const orderData = await createOrderResponse.json();
+
+            if (!orderData.id) {
+                throw new Error('Unable to create PayPal order.');
+            }
+
+            // redirect user
+            const approvalUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${orderData.id}`;
+            window.location.href = approvalUrl;
+        } catch (error) {
+            console.error('Error creating PayPal order:', error);
+            alert('An error occurred while processing your payment. Please try again.');
+        }
+    });
+</script>
+</body>
+</html>

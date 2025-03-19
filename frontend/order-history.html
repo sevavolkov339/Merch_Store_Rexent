@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="sidebar">
+    <a href="index.html" class="menu-item">Main Page</a>
+    <a href="about.html" class="menu-item">About</a>
+    <a href="order-history.html" class="menu-item active">Order History</a>
+    <a href="add-product.html" class="menu-item">Add New Product</a>
+</div>
+<div class="content">
+    <h1>Order History</h1>
+    <table id="order-table">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Transaction ID</th>
+            <th>Order Date</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const tableBody = document.querySelector("#order-table tbody");
+
+
+        function fetchOrders() {
+            fetch("http://localhost:5000/payment/orders")
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error("Failed to fetch orders");
+                    }
+                    return response.json();
+                })
+                .then((orders) => renderOrders(orders))
+                .catch((err) => console.error("Error loading orders:", err));
+        }
+
+        //orders into the table
+        function renderOrders(orders) {
+            tableBody.innerHTML = "";
+            orders.forEach((order) => {
+                const row = document.createElement("tr");
+
+                row.innerHTML = `
+                    <td>${order._id}</td>
+                    <td>${order.productId ? order.productId.name : "Unknown"}</td>
+                    <td>$${order.amount.toFixed(2)}</td>
+                    <td>${order.transactionId}</td>
+                    <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+                `;
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        fetchOrders();
+    });
+</script>
+</body>
+</html>

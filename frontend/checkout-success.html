@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Success</title>
+    <style>
+        body {
+            font-family: "Jersey 10", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+            image-rendering: pixelated;
+            text-align: center;
+            font-size: 33px;
+        }
+
+        h1, p, a {
+            margin: 0.5em 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #000;
+            background-color: #ffd700;
+            padding: 10px 20px;
+            border: 3px solid #000;
+            display: inline-block;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        a:hover {
+            background-color: #ffa500;
+            animation: squash-and-stretch 0.2s ease-in-out;
+        }
+
+        @keyframes squash-and-stretch {
+            0% {
+                transform: scale(1, 1);
+            }
+            50% {
+                transform: scale(1.2, 0.8);
+            }
+            100% {
+                transform: scale(1, 1);
+            }
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1>Payment Successful ! :)</h1>
+    <p>Thank you for your purchase. Your transaction has been completed.</p>
+    <a href="/frontend/index.html">Return to Store</a>
+</div>
+</body>
+</html>

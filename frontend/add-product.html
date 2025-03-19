@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Product</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: 'Jersey 10', Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 27px;
+            /*font-weight: normal;*/
+            color: #000;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        form {
+            background-color: #ffffff;
+            border: 0px solid #000000;
+            border-radius: 0;
+            padding: 20px;
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        label {
+            font-size: 24px;
+            color: #000;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: left;
+            font-family: 'Jersey 10', Arial, sans-serif;
+            font-weight: normal;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            margin-bottom: 12px;
+            padding: 10px;
+            font-size: 24px;
+            border: 4px solid #000000;
+            border-radius: 0;
+            font-family: 'Jersey 10', Arial, sans-serif;
+            box-sizing: border-box;
+            font-weight: normal;
+        }
+
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #000000;
+            color: #ffffff;
+            border: 0px solid #ffffff;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 12px 20px;
+            text-transform: uppercase;
+            border-radius: 0;
+            transition: background-color 0.3s ease;
+            font-family: 'Jersey 10', Arial, sans-serif;
+        }
+
+
+        button:hover {
+            animation: squash-stretch 0.3s ease forwards;
+            background-color: #333;
+        }
+
+
+        @keyframes squash-stretch {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1, 0.8);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #status-message {
+            font-size: 12px;
+            color: #000000;
+            margin-top: 10px;
+            font-family: 'Jersey 10', Arial, sans-serif;
+        }
+
+        .content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <a href="index.html" class="menu-item">Main Page</a>
+    <a href="about.html" class="menu-item">About</a>
+    <a href="order-history.html" class="menu-item">Order History</a>
+    <a href="add-product.html" class="menu-item active">Add New Product</a>
+</div>
+<div class="content">
+    <h1>Add New Product</h1>
+    <form id="add-product-form">
+        <label for="product-name">Product Name:</label>
+        <input type="text" id="product-name" name="product-name" required>
+        <br>
+        <label for="product-price">Price ($):</label>
+        <input type="number" id="product-price" name="product-price" required>
+        <br>
+        <label for="product-description">Short Description:</label>
+        <textarea id="product-description" name="product-description" required></textarea>
+        <br>
+        <label for="product-long-description">Long Description:</label>
+        <textarea id="product-long-description" name="product-long-description" required></textarea>
+        <br>
+        <label for="product-image">Image URL:</label>
+        <input type="url" id="product-image" name="product-image" required>
+        <br>
+        <button type="submit">Add Product</button>
+    </form>
+
+    <p id="status-message" style="color: green; font-size: 24px;"></p>
+</div>
+
+<script>
+    document.getElementById("add-product-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById("product-name").value;
+        const price = parseFloat(document.getElementById("product-price").value);
+        const description = document.getElementById("product-description").value;
+        const longDescription = document.getElementById("product-long-description").value;
+        const imageUrl = document.getElementById("product-image").value;
+
+        const product = { name, price, description, longDescription, imageUrl };
+
+        try {
+            const response = await fetch("http://localhost:5000/products", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(product)
+            });
+
+            if (response.ok) {
+                document.getElementById("status-message").textContent = "Product added successfully!";
+                document.getElementById("add-product-form").reset();
+            } else {
+                throw new Error("Failed to add product");
+            }
+        } catch (error) {
+            document.getElementById("status-message").textContent = "Error: " + error.message;
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Canceled</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-family: 'Jersey 10', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+
+
+        }
+
+        h1 {
+            font-size: 48px;
+            text-transform: uppercase;
+            color: #ff5555;
+        }
+
+        p {
+            font-size: 26px;
+            margin: 20px 0;
+        }
+
+        a {
+            font-size: 26px;
+            color: #ff5555;
+            text-decoration: none;
+            background-color: #111111;
+            border: 3px solid #ff5555;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+
+        a:hover {
+            background-color: #ff5555;
+            color: #111111;
+            animation: squash-and-stretch 0.2s ease-in-out;
+        }
+
+        @keyframes squash-and-stretch {
+            0% {
+                transform: scale(1, 1);
+            }
+            50% {
+                transform: scale(1.2, 0.8);
+            }
+            100% {
+                transform: scale(1, 1);
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>Payment Cancelled :(</h1>
+<p>Your payment process was cancelled. You can try again if you wish.</p>
+<a href="/frontend/index.html">Return to Store</a>
+</body>
+</html>
